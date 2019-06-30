@@ -241,13 +241,37 @@
       [self performSelectorInBackground:@selector(startTask:) withObject:params];
     } else {
 
-      NSString *full_link = [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@", bash, param1, param2, param3, param4, param5];
-      NSString *s = [NSString stringWithFormat:@"tell application \"Terminal\" \n\
-                 do script \"%@\" \n\
-                 activate \n\
-                 end tell", full_link];
-      NSAppleScript *as = [NSAppleScript.alloc initWithSource: s];
-      [as executeAndReturnError:nil];
+      NSString *full_link = [NSString stringWithFormat:@"'%@' %@ %@ %@ %@ %@", bash, param1, param2, param3, param4, param5];
+      NSString *runTerm = [NSString stringWithFormat:@"tell application \"Terminal\" \n\
+                           do script \"%@\" \n\
+                           activate \n\
+                           end tell", full_link];
+      
+      NSString *runiTerm2 = [NSString stringWithFormat:@"tell application \"iTerm2\" \n\
+                             tell current window \n\
+                             create tab with default profile \n\
+                             tell current session \n\
+                             write text \"%@\" \n\
+                             end tell \n\
+                             end tell \n\
+                             end tell", full_link];
+      
+      NSDictionary* errorDict;
+      NSAppleEventDescriptor* returnDescriptor = NULL;
+      NSAppleScript *scriptObject = [NSAppleScript.alloc initWithSource: runiTerm2];
+      // [as executeAndReturnError:nil];
+      returnDescriptor = [scriptObject executeAndReturnError: &errorDict];
+      if (returnDescriptor != NULL) {
+        // return error
+      }
+      if (errorDict != nil) {
+        NSLog( @"%@", errorDict);
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"OK"];
+        alert.messageText = @"Running Applescript for Terminal command failed";
+        alert.informativeText = errorDict.allValues[0];
+        [alert runModal];
+      }
     }
 }
 
