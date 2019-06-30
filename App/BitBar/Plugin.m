@@ -241,8 +241,8 @@
       [self performSelectorInBackground:@selector(startTask:) withObject:params];
     } else {
 
-      NSString *full_link = [NSString stringWithFormat:@"'%@' %@ %@ %@ %@ %@", bash, param1, param2, param3, param4, param5];
-      NSString *runTerm = [NSString stringWithFormat:@"tell application \"Terminal\" \n\
+      NSString *full_link = [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@", bash, param1, param2, param3, param4, param5];
+      NSString *runTerminal = [NSString stringWithFormat:@"tell application \"Terminal\" \n\
                            do script \"%@\" \n\
                            activate \n\
                            end tell", full_link];
@@ -256,10 +256,10 @@
                              end tell \n\
                              end tell", full_link];
       
-      NSDictionary* errorDict;
-      NSAppleEventDescriptor* returnDescriptor = NULL;
       NSAppleScript *scriptObject = [NSAppleScript.alloc initWithSource: runiTerm2];
       // [as executeAndReturnError:nil];
+      NSDictionary* errorDict;
+      NSAppleEventDescriptor* returnDescriptor = NULL;
       returnDescriptor = [scriptObject executeAndReturnError: &errorDict];
       if (returnDescriptor != NULL) {
         // return error
@@ -268,7 +268,8 @@
         NSLog( @"%@", errorDict);
         NSAlert *alert = [[NSAlert alloc] init];
         [alert addButtonWithTitle:@"OK"];
-        alert.messageText = @"Running Applescript for Terminal command failed";
+        [alert setAlertStyle:NSAlertStyleCritical];
+        alert.messageText = @"Running Applescript failed!";
         alert.informativeText = errorDict.allValues[0];
         [alert runModal];
       }
