@@ -1,5 +1,11 @@
 # BitBar Changes
 
+## v1.9.3
+
+* Added `iTerm2` support
+* Updated better error handling for AppleScript
+* Added `Accessibility` support, asking to start iTerm2/Terminal
+
 ## v1.9.2
 
 * Added Sparkle updater
